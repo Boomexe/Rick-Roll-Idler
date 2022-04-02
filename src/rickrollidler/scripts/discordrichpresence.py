@@ -3,6 +3,7 @@ from time import sleep
 
 success = False
 large_image = 'rick'
+print('Started Discord Presence')
 
 while success != True:
     try:

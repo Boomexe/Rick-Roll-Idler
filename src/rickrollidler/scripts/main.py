@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 # import discordrichpresence # Discord Rich Presence
 
@@ -8,6 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 import sys
+import multiprocessing
 
 cwd = os.getcwd()
 src = os.path.join(cwd,'src','rickrollidler')
@@ -33,6 +35,14 @@ def saveGame():
     with open(gameDataDir,'w') as data:
         json.dump(gameData,data)
 
+# Discord Presence
+def discordPresence():
+    exec(open(discordRichPresence).read())
+
+discordRichPresence = os.path.join(src,'scripts','discordrichpresence.py')
+discordProcess = multiprocessing.Process(target=discordPresence)
+
+
 # Variables
 uiUpdateRate = 200
 
@@ -47,22 +57,6 @@ def efficiencyButtonPressed():
         gameData['rickEfficiencyPrice'] *= 2
         gameData['rickEfficiencyUpgradeOwned'] += 1
         gameData['rickrollsPerClick'] += 2
-
-# GUI
-def window():
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-
-    # DO STUFF HERE
-    ui.rickButton.clicked.connect(rickButtonPressed)
-    ui.rickRollEfficiencyButton.clicked.connect(efficiencyButtonPressed)
-
-    # RUN BEFORE THIS LINE
-    ui.retranslateUi(MainWindow)
-    sys.exit(app.exec_())
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -167,4 +161,21 @@ class Ui_MainWindow(object):
         self.menuUpdate_Log.setText(_translate("MainWindow", "Update Log"))
         self.menuUpdate_Log.setShortcut(_translate("MainWindow", "4"))
 
-window() # replace with if __main__ in ui.py if doesnt work
+# GUI
+if __name__ == "__main__":
+
+    discordProcess.start()
+    # GUI
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+
+    # DO STUFF HERE
+    ui.rickButton.clicked.connect(rickButtonPressed)
+    ui.rickRollEfficiencyButton.clicked.connect(efficiencyButtonPressed)
+
+    # RUN BEFORE THIS LINE
+    ui.retranslateUi(MainWindow)
+    sys.exit(app.exec_())

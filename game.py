@@ -1,9 +1,8 @@
-import subprocess
-import os
+from os import getcwd, path
+from os.path import join
 
-cwd = os.getcwd()
-mainScript = os.path.join(cwd,'src','scripts','main.py')
-discordPresence = os.path.join(cwd,'src','scripts','discordrichpresence.py')
+cwd = getcwd()
+mainScript = path.join(cwd,'src', 'rickrollidler', 'scripts', 'main.py')
+discordPresence = path.join(cwd, 'src', 'rickrollidler', 'scripts', 'discordrichpresence.py')
 
 exec(open(mainScript).read())
-# exec(open(discordPresence).read()) # RUNS ONLY FIRST ONE, NOT SECOND
